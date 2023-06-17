@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>services.DataTransformerService &mdash; Steam Data Generator 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Steam Data Generator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">SteamDataGenerate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Steam Data Generator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">services.DataTransformerService</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for services.DataTransformerService</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Import Libraries</span>
+<span class="kn">from</span> <span class="nn">services.BaseService</span> <span class="kn">import</span> <span class="n">BaseService</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<div class="viewcode-block" id="DataTransformerService"><a class="viewcode-back" href="../../services.html#services.DataTransformerService.DataTransformerService">[docs]</a><span class="k">class</span> <span class="nc">DataTransformerService</span><span class="p">(</span><span class="n">BaseService</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a function that is used to emulate ETL from a data-mart.</span>
+<span class="sd">    This is a pipeline to load the data, process it, and save it.</span>
+
+<span class="sd">    This data csv is used for all models.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Temporary Function - will refactor to classes</span>
+<div class="viewcode-block" id="DataTransformerService.merge_tokenized_tags"><a class="viewcode-back" href="../../services.html#services.DataTransformerService.DataTransformerService.merge_tokenized_tags">[docs]</a>    <span class="k">def</span> <span class="nf">merge_tokenized_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Data/ProcessedData/steam_games_merged.csv&#39;</span><span class="p">)</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Data/ProcessedData/steam_games_tokenized.csv&#39;</span><span class="p">)</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Data/ProcessedData/steam_games_tags_added.csv&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Print the game column names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Game Column Names: &quot;</span> <span class="o">+</span> <span class="n">games</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="c1"># Print length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Game Length: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">games</span><span class="p">)))</span>
+        <span class="c1"># Print the head</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Game Head: &quot;</span> <span class="o">+</span> <span class="n">games</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+        <span class="c1"># Print the NaNs in the games dataframe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Game NaNs: &quot;</span> <span class="o">+</span> <span class="n">games</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+        <span class="c1"># Print the column names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Tokens Columns: &quot;</span> <span class="o">+</span> <span class="n">tokens</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="c1"># Print the length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Tokens Length: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)))</span>
+
+        <span class="c1"># Print the column names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Tags Columns: &quot;</span> <span class="o">+</span> <span class="n">tags</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="c1"># Print the length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Tags Length: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)))</span>
+
+        <span class="c1"># From the &#39;tokens&#39; dataframe, get the &#39;Id&#39; and &#39;Tokens&#39; columns</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[[</span><span class="s1">&#39;Id&#39;</span><span class="p">,</span> <span class="s1">&#39;tokens&#39;</span><span class="p">]]</span>
+
+        <span class="c1"># From the &#39;tags&#39; dataframe, get the &#39;Id&#39; and target columns</span>
+        <span class="n">tag_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Genre&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Players&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Sub-Genre&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Super&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Theme&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Visual&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Feature&#39;</span><span class="p">]</span>
+        <span class="c1"># To tags, copy the &#39;Id&#39; and target columns</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span><span class="p">[[</span><span class="s1">&#39;Id&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">tag_cols</span><span class="p">]</span>
+
+        <span class="c1"># In games, drop the &#39;tag_cols&#39; from cols</span>
+        <span class="n">games</span> <span class="o">=</span> <span class="n">games</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">tag_cols</span><span class="p">)</span>
+
+        <span class="c1"># Merge tags into games on &#39;Id&#39;</span>
+        <span class="n">games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;Id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Merge tokens into games on &#39;Id&#39;</span>
+        <span class="n">games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;Id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Remove games with missing tags</span>
+        <span class="n">games</span> <span class="o">=</span> <span class="n">games</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">tag_cols</span><span class="p">)</span>
+
+        <span class="c1"># Print the column names in games</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Merged Games Columns: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">games</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+
+        <span class="c1"># Print the NaN&#39;s per column</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Merged Games NaN&#39;s per column: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">games</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+
+        <span class="c1"># Print the number of games in total</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Merged Games Length: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">games</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">games</span></div>
+
+    <span class="c1"># If Main</span>
+
+<div class="viewcode-block" id="DataTransformerService.run"><a class="viewcode-back" href="../../services.html#services.DataTransformerService.DataTransformerService.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">games</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_tokenized_tags</span><span class="p">()</span>
+        <span class="n">games</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;Data/ProcessedData/steam_games_datamart.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, GYLD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

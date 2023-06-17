@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>services.DataLoaderService &mdash; Steam Data Generator 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Steam Data Generator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">SteamDataGenerate</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Steam Data Generator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">services.DataLoaderService</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for services.DataLoaderService</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  data_base=None</span>
+<span class="sd">  this does ETL as if it was loading SQL queries from a database (but it is not).</span>
+<span class="sd">    This is only offline loader, it is used to load:</span>
+<span class="sd">    SteamGames</span>
+<span class="sd">    SteamGamesTags</span>
+<span class="sd">    SteamGamesGenres</span>
+<span class="sd">    SteamGenres</span>
+<span class="sd">    SteamTags</span>
+<span class="sd">    SteamGamesReviews</span>
+
+<span class="sd">    This does NOT tokenize the descriptions - this is done in the &#39;data_tokenizer&#39;</span>
+
+<span class="sd">    It will then compile these into a single dataframe and CSV file.</span>
+
+<span class="sd">    NOTE: If the Steam_Games_Merged.csv does NOT exist, you can just run this as long as you supply the inputs.</span>
+<span class="sd">    It will output the complete and cleaned/processed dataframe as a CSV file.</span>
+
+<span class="sd">    UPDATE IMPORTANT: This is treated as a &#39;Loader&#39; and all transformations are being consolidated into the</span>
+<span class="sd">    data_transformer file. This will produce a &#39;main&#39; training CSV file that models use.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="c1"># Import Libraries</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">services.BaseService</span> <span class="kn">import</span> <span class="n">BaseService</span>
+
+
+<div class="viewcode-block" id="DataLoaderService"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService">[docs]</a><span class="k">class</span> <span class="nc">DataLoaderService</span><span class="p">(</span><span class="n">BaseService</span><span class="p">):</span>
+
+    <span class="c1"># This is just a simple loader for the data</span>
+<div class="viewcode-block" id="DataLoaderService.load_data"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService.load_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Load the data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Data is loading&#39;</span><span class="p">)</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_base</span><span class="o">.</span><span class="n">load_from_warehouse</span><span class="p">(</span><span class="s2">&quot;select * from SteamGame&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">steam_games</span><span class="p">)))</span>
+
+        <span class="n">steam_games_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_base</span><span class="o">.</span><span class="n">load_from_warehouse</span><span class="p">(</span><span class="s2">&quot;select * from SteamGameTag&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games Tags: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">steam_games_tags</span><span class="p">)))</span>
+
+        <span class="n">steam_games_genres</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_base</span><span class="o">.</span><span class="n">load_from_warehouse</span><span class="p">(</span><span class="s2">&quot;select * from SteamGameGenre&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games Genres: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">steam_games_genres</span><span class="p">)))</span>
+
+        <span class="n">steam_genres</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_base</span><span class="o">.</span><span class="n">load_from_warehouse</span><span class="p">(</span><span class="s2">&quot;select * from SteamGenre&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Genres: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">steam_genres</span><span class="p">)))</span>
+
+        <span class="c1"># steam_tags = pd.read_sql(&quot;select * from SteamTag&quot;, con_str)</span>
+        <span class="n">steam_tags</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;temp/SteamTags_February.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># self.data_base.load_data(&#39;select * from SteamTagsCategory&#39;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Tags: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">steam_tags</span><span class="p">)))</span>
+
+        <span class="n">steam_reviews</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_base</span><span class="o">.</span><span class="n">load_from_warehouse</span><span class="p">(</span><span class="s2">&quot;select * from SteamCountReview&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Reviews: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">steam_reviews</span><span class="p">)))</span>
+
+        <span class="c1"># Print the Columns of each dataframe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games Columns: &#39;</span> <span class="o">+</span> <span class="n">steam_games</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games Tags Columns: &#39;</span> <span class="o">+</span> <span class="n">steam_games_tags</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games Genres Columns: &#39;</span> <span class="o">+</span> <span class="n">steam_games_genres</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Genres Columns: &#39;</span> <span class="o">+</span> <span class="n">steam_genres</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Tags Columns: &#39;</span> <span class="o">+</span> <span class="n">steam_tags</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Reviews Columns: &#39;</span> <span class="o">+</span> <span class="n">steam_reviews</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="c1"># Drop the columns we don&#39;t need</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">steam_games</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;FranchiseId&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;MainId&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;SteamUrl&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;IsPublished&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;IsReleased&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;Graphics&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;Storage&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;Memory&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;UpdateDate&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># From SteamReviews, drop the columns we don&#39;t need</span>
+        <span class="n">steam_reviews</span> <span class="o">=</span> <span class="n">steam_reviews</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Id&#39;</span><span class="p">,</span> <span class="s1">&#39;ReviewScoreDesc&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">steam_games</span><span class="p">,</span> <span class="n">steam_games_tags</span><span class="p">,</span> <span class="n">steam_games_genres</span><span class="p">,</span> <span class="n">steam_genres</span><span class="p">,</span> <span class="n">steam_tags</span><span class="p">,</span> <span class="n">steam_reviews</span></div>
+
+    <span class="c1"># This function is to connect Genres and Genre Types based on ID</span>
+<div class="viewcode-block" id="DataLoaderService.connect_genres"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService.connect_genres">[docs]</a>    <span class="k">def</span> <span class="nf">connect_genres</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steam_games_genres</span><span class="p">,</span> <span class="n">steam_genres</span><span class="p">):</span>
+        <span class="c1"># Merge the two dataframes to produce Game ID, Genre ID and Genre Name</span>
+        <span class="c1"># Merge on Games Genre (GenreId) with SteamGenre (Id)</span>
+        <span class="n">steam_games_genres_named</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">steam_games_genres</span><span class="p">,</span> <span class="n">steam_genres</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;GenreId&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;Id&#39;</span><span class="p">,</span>
+                                            <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games Genres Named: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">steam_games_genres_named</span><span class="p">)))</span>
+
+        <span class="c1"># Drop the extra ID columns</span>
+        <span class="n">steam_games_genres_named</span> <span class="o">=</span> <span class="n">steam_games_genres_named</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Id_y&#39;</span><span class="p">,</span> <span class="s1">&#39;GenreId&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Rename Id_x to Id</span>
+        <span class="n">steam_games_genres_named</span> <span class="o">=</span> <span class="n">steam_games_genres_named</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Id_x&#39;</span><span class="p">:</span> <span class="s1">&#39;Id&#39;</span><span class="p">})</span>
+
+        <span class="c1"># Print the head</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">steam_games_genres_named</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">steam_games_genres_named</span></div>
+
+    <span class="c1"># This function is to connect Tags and Tag Types based on ID</span>
+<div class="viewcode-block" id="DataLoaderService.connect_tags"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService.connect_tags">[docs]</a>    <span class="k">def</span> <span class="nf">connect_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steam_games_tags</span><span class="p">,</span> <span class="n">steam_tags</span><span class="p">):</span>
+        <span class="c1"># Merge the two dataframes to produce Game ID, Tag ID and Tag Name</span>
+        <span class="c1"># Merge on Games Tags (TagId) with SteamTags (Id)</span>
+        <span class="n">steam_games_tags_named</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">steam_games_tags</span><span class="p">,</span> <span class="n">steam_tags</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;TagId&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;Id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Drop the extra ID columns</span>
+        <span class="n">steam_games_tags_named</span> <span class="o">=</span> <span class="n">steam_games_tags_named</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Id_y&#39;</span><span class="p">,</span> <span class="s1">&#39;TagId&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Rename Id_x to Id</span>
+        <span class="n">steam_games_tags_named</span> <span class="o">=</span> <span class="n">steam_games_tags_named</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Id_x&#39;</span><span class="p">:</span> <span class="s1">&#39;Id&#39;</span><span class="p">})</span>
+
+        <span class="c1"># Print the head</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">steam_games_tags_named</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">steam_games_tags_named</span></div>
+
+    <span class="c1"># Compile Genres into a list per GameId</span>
+<div class="viewcode-block" id="DataLoaderService.list_genres"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService.list_genres">[docs]</a>    <span class="k">def</span> <span class="nf">list_genres</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steam_games_genres_named</span><span class="p">):</span>
+        <span class="c1"># Group by GameId and Name to create a list of genres per game</span>
+        <span class="n">steam_games_genres_grouped</span> <span class="o">=</span> <span class="n">steam_games_genres_named</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;GameId&#39;</span><span class="p">)[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;GenreList&#39;</span><span class="p">)</span>
+        <span class="c1"># Print the head</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">steam_games_genres_grouped</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">steam_games_genres_grouped</span></div>
+
+    <span class="c1"># Split Tag Categories into Columns and add Tags to each as a list</span>
+<div class="viewcode-block" id="DataLoaderService.list_tags"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService.list_tags">[docs]</a>    <span class="k">def</span> <span class="nf">list_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steam_games_tags_named</span><span class="p">):</span>
+        <span class="c1"># Reshape the dataframe so that each unique GameId has only one row</span>
+        <span class="n">steam_games_tags_named</span> <span class="o">=</span> <span class="n">steam_games_tags_named</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;GameId&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Category&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span>
+                                                                    <span class="n">aggfunc</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dropna</span><span class="p">()))</span>
+
+        <span class="c1"># Rename the index column to &#39;Game Id&#39;</span>
+        <span class="n">steam_games_tags_named</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Game Id&#39;</span>
+
+        <span class="c1"># Reset the index to turn the index column into a regular column</span>
+        <span class="n">steam_games_tags_named</span> <span class="o">=</span> <span class="n">steam_games_tags_named</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+        <span class="c1"># Print the resulting dataframe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">steam_games_tags_named</span><span class="p">)</span>
+
+        <span class="c1"># Print the column names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">steam_games_tags_named</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">steam_games_tags_named</span></div>
+
+    <span class="c1"># Process Reviews with cleaning</span>
+<div class="viewcode-block" id="DataLoaderService.process_reviews"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService.process_reviews">[docs]</a>    <span class="k">def</span> <span class="nf">process_reviews</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steam_reviews</span><span class="p">):</span>
+        <span class="c1"># If there are any null or missing values in any columns, replace with 0</span>
+        <span class="n">steam_reviews</span> <span class="o">=</span> <span class="n">steam_reviews</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Ensure that the Review Score, Total Positive, Total Negative and Total Reviews are all integers</span>
+        <span class="n">steam_reviews</span><span class="p">[</span><span class="s1">&#39;TotalPositive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_reviews</span><span class="p">[</span><span class="s1">&#39;TotalPositive&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">steam_reviews</span><span class="p">[</span><span class="s1">&#39;TotalNegative&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_reviews</span><span class="p">[</span><span class="s1">&#39;TotalNegative&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">steam_reviews</span><span class="p">[</span><span class="s1">&#39;TotalReviews&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_reviews</span><span class="p">[</span><span class="s1">&#39;TotalReviews&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># Set &#39;ReviewScore&#39; to float type</span>
+        <span class="n">steam_reviews</span><span class="p">[</span><span class="s1">&#39;ReviewScore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_reviews</span><span class="p">[</span><span class="s1">&#39;ReviewScore&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="c1"># For &#39;ReviewScore&#39; replace with Percentage of Positive Reviews for Total Reviews as Float</span>
+        <span class="n">steam_reviews</span><span class="p">[</span><span class="s1">&#39;ReviewScore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_reviews</span><span class="p">[</span><span class="s1">&#39;TotalPositive&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">steam_reviews</span><span class="p">[</span><span class="s1">&#39;TotalReviews&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Set display options to show all columns</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">steam_reviews</span></div>
+
+    <span class="c1"># Create and add YearGroups (This is important for the sales estimation model)</span>
+<div class="viewcode-block" id="DataLoaderService.add_year_groups"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService.add_year_groups">[docs]</a>    <span class="k">def</span> <span class="nf">add_year_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steam_games</span><span class="p">):</span>
+        <span class="c1"># Load the &#39;steam_games_sales_stats.csv&#39; file</span>
+        <span class="c1"># This file is generated from the &#39;analysis_estimate_sales&#39; - it is used as a &#39;reference&#39;</span>
+        <span class="c1"># So for each &#39;year&#39; of the game&#39;s release year, we add a &#39;year group&#39; to the dataframe</span>
+        <span class="c1"># These groups were determined using distributions of the sales data</span>
+
+        <span class="c1"># Load the data</span>
+        <span class="n">df_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_base</span><span class="o">.</span><span class="n">load_from_warehouse</span><span class="p">(</span>
+            <span class="s2">&quot;select YearGroupStart as YearGroup, SR25 as SR_25, SR50 as SR_50, SR75 as SR_75, SRIQR as SR_IQR from  &quot;</span>
+            <span class="s2">&quot;SteamGameSaleStats&quot;</span><span class="p">)</span>
+        <span class="c1"># Keep target columns:</span>
+        <span class="n">stat_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;YearGroup&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;SR_25&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;SR_50&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;SR_75&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;SR_IQR&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Create a new dataframe with only the target</span>
+        <span class="n">df_stats</span> <span class="o">=</span> <span class="n">df_stats</span><span class="p">[</span><span class="n">stat_cols</span><span class="p">]</span>
+        <span class="n">df_stats</span><span class="p">[</span><span class="s2">&quot;YearGroup&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_stats</span><span class="p">[</span><span class="s2">&quot;YearGroup&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;states&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">df_stats</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="c1"># For each game, if the release data is a valid date, extract the year into a new column</span>
+        <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;ReleaseDate&#39;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
+
+        <span class="c1"># For games with NaN release dates, set the year to 0</span>
+        <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># In steam_games, create a new column &#39;YearGroup&#39; and set to 0</span>
+
+        <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Create the yearly groups per game in dataframe</span>
+        <span class="c1"># For each game, we add the &#39;Year Group&#39; based on the &#39;Year&#39; column</span>
+        <span class="c1"># This is done by comparing the &#39;Year&#39; column to the &#39;Year&#39; column in the &#39;df_stats&#39; dataframe</span>
+        <span class="c1"># For the col &#39;Year&#39;, if the value is pre-2013 and above &#39;0&#39;, set the &#39;Year&#39; to &#39;1&#39;</span>
+
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">steam_games</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="k">if</span> <span class="mi">2013</span> <span class="o">&gt;</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">steam_games</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2013</span><span class="p">:</span>
+                <span class="n">steam_games</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2013&#39;</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2014</span><span class="p">:</span>
+                <span class="n">steam_games</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2014&#39;</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2015</span><span class="p">:</span>
+                <span class="n">steam_games</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2015&#39;</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2016</span><span class="p">:</span>
+                <span class="n">steam_games</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2016&#39;</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2017</span><span class="p">:</span>
+                <span class="n">steam_games</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2017&#39;</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2018</span><span class="p">:</span>
+                <span class="n">steam_games</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2018&#39;</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2019</span><span class="p">:</span>
+                <span class="n">steam_games</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2019&#39;</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">2020</span><span class="p">:</span>
+                <span class="n">steam_games</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2020&#39;</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">steam_games</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0. Unknown&#39;</span>
+
+        <span class="c1"># For any &#39;Nans&#39; in the &#39;YearGroup&#39; column, replace with &#39;0. Unknown&#39;</span>
+        <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;0. Unknown&#39;</span><span class="p">)</span>
+        <span class="c1"># Print the unique values in the &#39;YearGroup&#39; column</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games YearGroup Unique Values: </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()))</span>
+        <span class="c1"># Print the count of games per &#39;YearGroup&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games YearGroup Count: </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;YearGroup&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()))</span>
+
+        <span class="c1"># Merge the &#39;YearGroup&#39; column from the &#39;steam_games&#39; dataframe to the &#39;df_stats&#39; dataframe</span>
+        <span class="c1"># This is done by merging on the &#39;YearGroup&#39; column</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">steam_games</span><span class="p">,</span> <span class="n">df_stats</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;YearGroup&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+        <span class="c1"># From stat_cols, remove &#39;YearGroup&#39;</span>
+        <span class="n">stat_cols</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;YearGroup&#39;</span><span class="p">)</span>
+        <span class="c1"># For any &#39;Nans&#39; in the stat_cols columns, replace with 0</span>
+        <span class="n">steam_games</span><span class="p">[</span><span class="n">stat_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_games</span><span class="p">[</span><span class="n">stat_cols</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">steam_games</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="c1"># Return the dataframe</span>
+        <span class="k">return</span> <span class="n">steam_games</span></div>
+
+    <span class="c1"># We add the player estimates to the dataframe</span>
+    <span class="c1"># This helps with segmenting games/publishers or other things based on low/mid/high estimations</span>
+<div class="viewcode-block" id="DataLoaderService.add_player_estimates"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService.add_player_estimates">[docs]</a>    <span class="k">def</span> <span class="nf">add_player_estimates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steam_games</span><span class="p">):</span>
+        <span class="c1"># For each game in the dataframe, from &#39;total reviews&#39;, multiply by &#39;SR_25%&#39; to get low estimate</span>
+        <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;low_estimate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;TotalReviews&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;SR_25&#39;</span><span class="p">]</span>
+
+        <span class="c1"># For each game in the dataframe, from &#39;total reviews&#39;, multiply by &#39;SR_IQR%&#39; to get mid estimate</span>
+        <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;mid_estimate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;TotalReviews&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;SR_IQR&#39;</span><span class="p">]</span>
+
+        <span class="c1"># For each game in the dataframe, from &#39;total reviews&#39;, multiply by &#39;SR_75%&#39; to get high estimate</span>
+        <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;high_estimate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;TotalReviews&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;SR_75&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Return the dataframe</span>
+        <span class="k">return</span> <span class="n">steam_games</span></div>
+
+    <span class="c1"># Merge dataframes on the GameId to create 1 dataframe containing the Game Name/Information and Genres + Tags</span>
+<div class="viewcode-block" id="DataLoaderService.merge_dataframes"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService.merge_dataframes">[docs]</a>    <span class="k">def</span> <span class="nf">merge_dataframes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steam_games_genres_grouped</span><span class="p">,</span> <span class="n">steam_games_tags_grouped</span><span class="p">,</span> <span class="n">steam_games</span><span class="p">,</span> <span class="n">steam_reviews</span><span class="p">):</span>
+        <span class="c1"># Merge the two dataframes to produce Game ID, Genre ID and Genre Name</span>
+        <span class="c1"># Merge on Games Genre (GenreId) with SteamGenre (Id)</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">steam_games</span><span class="p">,</span> <span class="n">steam_games_genres_grouped</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;Id&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;GameId&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games Merged: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">steam_games</span><span class="p">)))</span>
+
+        <span class="c1"># Drop the extra ID columns</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">steam_games</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;GameId&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Merge the two dataframes to produce Game ID, Tag ID and Tag Name</span>
+        <span class="c1"># Merge on Games Genre (GenreId) with SteamGenre (Id)</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">steam_games</span><span class="p">,</span> <span class="n">steam_games_tags_grouped</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;Id&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;Game Id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games Merged: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">steam_games</span><span class="p">)))</span>
+
+        <span class="c1"># Drop the extra ID columns</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">steam_games</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Game Id&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">steam_games</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;TotalReviews&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Merge the steam_games dataframe with the steam_reviews dataframe on GameId</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">steam_games</span><span class="p">,</span> <span class="n">steam_reviews</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;Id&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;GameId&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Drop the extra ID columns</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">steam_games</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;GameId&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;columns steam game after marge&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">steam_games</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">steam_games</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+        <span class="c1"># For any null values in the ReviewScore column, replace with 0</span>
+        <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;ReviewScore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;ReviewScore&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># For any null values in the TotalReviews column, replace with 0</span>
+        <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;TotalReviews&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;TotalReviews&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># For any null values in the TotalPositive column, replace with 0</span>
+        <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;TotalPositive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;TotalPositive&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># For any null values in the TotalNegative column, replace with 0</span>
+        <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;TotalNegative&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">steam_games</span><span class="p">[</span><span class="s1">&#39;TotalNegative&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Print the head</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">steam_games</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">steam_games</span></div>
+
+    <span class="c1"># Clean Data</span>
+<div class="viewcode-block" id="DataLoaderService.clean_data"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService.clean_data">[docs]</a>    <span class="k">def</span> <span class="nf">clean_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steam_games</span><span class="p">):</span>
+        <span class="c1"># Get the number of NaNs per column in the dataframe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Steam Games NaNs: </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">steam_games</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+        <span class="c1"># Drop games with NaN title</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">steam_games</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Title&#39;</span><span class="p">])</span>
+        <span class="c1"># Drop games with NaN Developer</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">steam_games</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Developer&#39;</span><span class="p">])</span>
+        <span class="c1"># Drop games with NaN Description</span>
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">steam_games</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Description&#39;</span><span class="p">])</span>
+
+        <span class="n">steam_games</span> <span class="o">=</span> <span class="n">steam_games</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Id&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Drop games with Duplicate Title and Description, keeping First</span>
+        <span class="c1"># This is because &#39;First&#39; will be the game, and the rest will be DLC or Bundles</span>
+        <span class="c1"># steam_games = steam_games.drop_duplicates(subset=[&#39;Title&#39;, &#39;Description&#39;], keep=&#39;first&#39;)</span>
+        <span class="c1">#</span>
+        <span class="c1"># # Drop DLCs or Additional Content from the dataframe</span>
+        <span class="c1"># # If the description contains &#39;This content requires the base...&#39;</span>
+        <span class="c1"># # Then drop the row</span>
+        <span class="c1"># steam_games = steam_games[~steam_games[&#39;Description&#39;].str.contains(&#39;This content requires the base&#39;)]</span>
+        <span class="c1"># # If the description contains &#39;This content requires one of the following products to play&#39;</span>
+        <span class="c1"># # Then drop the row</span>
+        <span class="c1"># steam_games = steam_games[~steam_games[&#39;Description&#39;].str.contains(&#39;This content requires one of the following products to play&#39;)]</span>
+        <span class="c1"># # If the description contains &#39;This is additional content for&#39;</span>
+        <span class="c1"># # Then drop the row</span>
+        <span class="c1"># steam_games = steam_games[~steam_games[&#39;Description&#39;].str.contains(&#39;This is additional content for&#39;)]</span>
+        <span class="c1"># #</span>
+
+        <span class="k">return</span> <span class="n">steam_games</span></div>
+
+    <span class="c1"># Override run method</span>
+    <span class="c1"># Process and save the data - this is the main function</span>
+<div class="viewcode-block" id="DataLoaderService.run"><a class="viewcode-back" href="../../services.html#services.DataLoaderService.DataLoaderService.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Data loader run&quot;</span><span class="p">)</span>
+        <span class="c1"># Get the data</span>
+        <span class="n">steam_games</span><span class="p">,</span> <span class="n">steam_games_tags</span><span class="p">,</span> <span class="n">steam_games_genres</span><span class="p">,</span> <span class="n">steam_genres</span><span class="p">,</span> <span class="n">steam_tags</span><span class="p">,</span> <span class="n">steam_reviews</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+
+        <span class="c1"># Connect the Genres to the Genre Types</span>
+        <span class="n">steam_games_genres_named</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_genres</span><span class="p">(</span><span class="n">steam_games_genres</span><span class="p">,</span> <span class="n">steam_genres</span><span class="p">)</span>
+
+        <span class="c1"># Connect the Tags to the Tag Types</span>
+        <span class="n">steam_games_tags_named</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_tags</span><span class="p">(</span><span class="n">steam_games_tags</span><span class="p">,</span> <span class="n">steam_tags</span><span class="p">)</span>
+
+        <span class="c1"># List the Genres per Game</span>
+        <span class="n">steam_games_genres_grouped</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_genres</span><span class="p">(</span><span class="n">steam_games_genres_named</span><span class="p">)</span>
+
+        <span class="c1"># List the Tags per Game</span>
+        <span class="n">steam_games_tags_grouped</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_tags</span><span class="p">(</span><span class="n">steam_games_tags_named</span><span class="p">)</span>
+
+        <span class="c1"># Process the Reviews</span>
+        <span class="n">steam_reviews</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_reviews</span><span class="p">(</span><span class="n">steam_reviews</span><span class="p">)</span>
+
+        <span class="c1"># Merge the dataframes</span>
+        <span class="n">steam_games_merged</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_dataframes</span><span class="p">(</span><span class="n">steam_games_genres_grouped</span><span class="p">,</span> <span class="n">steam_games_tags_grouped</span><span class="p">,</span> <span class="n">steam_games</span><span class="p">,</span>
+                                                   <span class="n">steam_reviews</span><span class="p">)</span>
+
+        <span class="c1"># Drop any rows that do not contain a GenreList</span>
+        <span class="n">steam_games_merged</span> <span class="o">=</span> <span class="n">steam_games_merged</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GenreList&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Rename GenreList to Primary Genre</span>
+        <span class="n">steam_games_merged</span> <span class="o">=</span> <span class="n">steam_games_merged</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;GenreList&#39;</span><span class="p">:</span> <span class="s1">&#39;Genres&#39;</span><span class="p">})</span>
+
+        <span class="c1"># Drop any rows that do not contain a description</span>
+        <span class="n">steam_games_merged</span> <span class="o">=</span> <span class="n">steam_games_merged</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Description&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Drop any rows that state &#39;No Description Found&#39;</span>
+        <span class="n">steam_games_merged</span> <span class="o">=</span> <span class="n">steam_games_merged</span><span class="p">[</span><span class="n">steam_games_merged</span><span class="o">.</span><span class="n">Description</span> <span class="o">!=</span> <span class="s1">&#39;No Description Found&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Add Year Groups to Dataframe</span>
+        <span class="n">steam_games_merged</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_year_groups</span><span class="p">(</span><span class="n">steam_games_merged</span><span class="p">)</span>
+
+        <span class="c1"># Add Player Estimates to Dataframe</span>
+        <span class="n">steam_games_merged</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_player_estimates</span><span class="p">(</span><span class="n">steam_games_merged</span><span class="p">)</span>
+
+        <span class="c1"># Clean up the dataframes</span>
+        <span class="n">steam_games_merged</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean_data</span><span class="p">(</span><span class="n">steam_games_merged</span><span class="p">)</span>
+        <span class="n">steam_games_merged</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;temp/steam_games_merged.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">steam_games_merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;temp/steam_games_merged.csv&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SteamGamesMarged is saving&quot;</span><span class="p">)</span>
+        <span class="c1"># Save the data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_base</span><span class="o">.</span><span class="n">save_to_mining_database</span><span class="p">(</span><span class="n">steam_games_merged</span><span class="p">,</span> <span class="s2">&quot;SteamGamesMarged&quot;</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;if_exists&quot;</span><span class="p">:</span> <span class="s2">&quot;replace&quot;</span><span class="p">})</span>
+
+        <span class="c1"># Print the completion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SteamGamesMarged saved&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, GYLD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

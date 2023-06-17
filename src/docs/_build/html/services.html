@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>services package &mdash; Steam Data Generator 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="main_dd module" href="main_dd.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Steam Data Generator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">SteamDataGenerate</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Utility.html">Utility package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">data package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log.html">log package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main_dd.html">main_dd module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">services package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-services.BaseService">services.BaseService module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#services.BaseService.BaseService"><code class="docutils literal notranslate"><span class="pre">BaseService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-services.DataLoaderService">services.DataLoaderService module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#services.DataLoaderService.DataLoaderService"><code class="docutils literal notranslate"><span class="pre">DataLoaderService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#services-datatokenizerservice-module">services.DataTokenizerService module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-services.DataTransformerService">services.DataTransformerService module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#services.DataTransformerService.DataTransformerService"><code class="docutils literal notranslate"><span class="pre">DataTransformerService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-services.FillTagsService">services.FillTagsService module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#services.FillTagsService.FillTagsService"><code class="docutils literal notranslate"><span class="pre">FillTagsService</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-services">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Steam Data Generator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">SteamDataGenerate</a></li>
+      <li class="breadcrumb-item active">services package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/services.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="services-package">
+<h1>services package<a class="headerlink" href="#services-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-services.BaseService">
+<span id="services-baseservice-module"></span><h2>services.BaseService module<a class="headerlink" href="#module-services.BaseService" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.BaseService.BaseService">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.BaseService.</span></span><span class="sig-name descname"><span class="pre">BaseService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="data.html#data.AbstractData.AbstractData" title="data.AbstractData.AbstractData"><span class="pre">AbstractData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="log.html#log.ILoggerService.ILoggerService" title="log.ILoggerService.ILoggerService"><span class="pre">ILoggerService</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/BaseService.html#BaseService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.BaseService.BaseService" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="services.BaseService.BaseService.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/BaseService.html#BaseService.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.BaseService.BaseService.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-services.DataLoaderService">
+<span id="services-dataloaderservice-module"></span><h2>services.DataLoaderService module<a class="headerlink" href="#module-services.DataLoaderService" title="Permalink to this heading"></a></h2>
+<p>data_base=None
+this does ETL as if it was loading SQL queries from a database (but it is not).</p>
+<blockquote>
+<div><p>This is only offline loader, it is used to load:
+SteamGames
+SteamGamesTags
+SteamGamesGenres
+SteamGenres
+SteamTags
+SteamGamesReviews</p>
+<p>This does NOT tokenize the descriptions - this is done in the ‘data_tokenizer’</p>
+<p>It will then compile these into a single dataframe and CSV file.</p>
+<p>NOTE: If the Steam_Games_Merged.csv does NOT exist, you can just run this as long as you supply the inputs.
+It will output the complete and cleaned/processed dataframe as a CSV file.</p>
+<p>UPDATE IMPORTANT: This is treated as a ‘Loader’ and all transformations are being consolidated into the
+data_transformer file. This will produce a ‘main’ training CSV file that models use.</p>
+</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.DataLoaderService.</span></span><span class="sig-name descname"><span class="pre">DataLoaderService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="data.html#data.AbstractData.AbstractData" title="data.AbstractData.AbstractData"><span class="pre">AbstractData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="log.html#log.ILoggerService.ILoggerService" title="log.ILoggerService.ILoggerService"><span class="pre">ILoggerService</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#services.BaseService.BaseService" title="services.BaseService.BaseService"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseService</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService.add_player_estimates">
+<span class="sig-name descname"><span class="pre">add_player_estimates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steam_games</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService.add_player_estimates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService.add_player_estimates" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService.add_year_groups">
+<span class="sig-name descname"><span class="pre">add_year_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steam_games</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService.add_year_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService.add_year_groups" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService.clean_data">
+<span class="sig-name descname"><span class="pre">clean_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steam_games</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService.clean_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService.clean_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService.connect_genres">
+<span class="sig-name descname"><span class="pre">connect_genres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steam_games_genres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steam_genres</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService.connect_genres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService.connect_genres" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService.connect_tags">
+<span class="sig-name descname"><span class="pre">connect_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steam_games_tags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steam_tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService.connect_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService.connect_tags" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService.list_genres">
+<span class="sig-name descname"><span class="pre">list_genres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steam_games_genres_named</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService.list_genres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService.list_genres" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService.list_tags">
+<span class="sig-name descname"><span class="pre">list_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steam_games_tags_named</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService.list_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService.list_tags" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService.load_data">
+<span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService.load_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService.load_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService.merge_dataframes">
+<span class="sig-name descname"><span class="pre">merge_dataframes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steam_games_genres_grouped</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steam_games_tags_grouped</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steam_games</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steam_reviews</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService.merge_dataframes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService.merge_dataframes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService.process_reviews">
+<span class="sig-name descname"><span class="pre">process_reviews</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steam_reviews</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService.process_reviews"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService.process_reviews" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataLoaderService.DataLoaderService.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataLoaderService.html#DataLoaderService.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataLoaderService.DataLoaderService.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="services-datatokenizerservice-module">
+<h2>services.DataTokenizerService module<a class="headerlink" href="#services-datatokenizerservice-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-services.DataTransformerService">
+<span id="services-datatransformerservice-module"></span><h2>services.DataTransformerService module<a class="headerlink" href="#module-services.DataTransformerService" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.DataTransformerService.DataTransformerService">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.DataTransformerService.</span></span><span class="sig-name descname"><span class="pre">DataTransformerService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="data.html#data.AbstractData.AbstractData" title="data.AbstractData.AbstractData"><span class="pre">AbstractData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="log.html#log.ILoggerService.ILoggerService" title="log.ILoggerService.ILoggerService"><span class="pre">ILoggerService</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataTransformerService.html#DataTransformerService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataTransformerService.DataTransformerService" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#services.BaseService.BaseService" title="services.BaseService.BaseService"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseService</span></code></a></p>
+<p>This is a function that is used to emulate ETL from a data-mart.
+This is a pipeline to load the data, process it, and save it.</p>
+<p>This data csv is used for all models.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataTransformerService.DataTransformerService.merge_tokenized_tags">
+<span class="sig-name descname"><span class="pre">merge_tokenized_tags</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataTransformerService.html#DataTransformerService.merge_tokenized_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataTransformerService.DataTransformerService.merge_tokenized_tags" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="services.DataTransformerService.DataTransformerService.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/DataTransformerService.html#DataTransformerService.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.DataTransformerService.DataTransformerService.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-services.FillTagsService">
+<span id="services-filltagsservice-module"></span><h2>services.FillTagsService module<a class="headerlink" href="#module-services.FillTagsService" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="services.FillTagsService.FillTagsService">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">services.FillTagsService.</span></span><span class="sig-name descname"><span class="pre">FillTagsService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="data.html#data.AbstractData.AbstractData" title="data.AbstractData.AbstractData"><span class="pre">AbstractData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="log.html#log.ILoggerService.ILoggerService" title="log.ILoggerService.ILoggerService"><span class="pre">ILoggerService</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/services/FillTagsService.html#FillTagsService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.FillTagsService.FillTagsService" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#services.BaseService.BaseService" title="services.BaseService.BaseService"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseService</span></code></a></p>
+</dd></dl>
+
+</section>
+<section id="module-services">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-services" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="main_dd.html" class="btn btn-neutral float-left" title="main_dd module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, GYLD.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
