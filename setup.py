@@ -11,7 +11,7 @@ setuptools.setup(
     install_requires=['numpy~=1.24.2',
                       'pymssql~=2.2.7',
                       'SQLAlchemy~=1.4.44',
-                      'requests~=2.28.1'
+                      'requests~=2.28.1',
                       'pandas~=1.5.3'],
 
     classifiers=[
