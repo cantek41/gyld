@@ -10,8 +10,10 @@ dependencies = [
 [tool.setuptools]
 package-dir = {"gyld.sdk" = "src"}
 packages = [
-    "gyld.sdk",
-    "gyld.sdk.base",
-    "gyld.sdk.helper",
-    "gyld.sdk.media"
+    'gyld.sdk',
+        'gyld.sdk.data',
+        'gyld.sdk.logservice',
+        'gyld.sdk.media',
+        'gyld.sdk.utility',
+        'gyld.sdk.services'
 ]
