@@ -1,7 +1,7 @@
 import requests
 import json
 
-from src.services.BaseService import BaseService
+from gyld.sdk.services.BaseService import BaseService
 
 
 class CallModelService(BaseService):

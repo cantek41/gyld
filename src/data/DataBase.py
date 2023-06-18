@@ -1,7 +1,7 @@
 import dataclasses
 import pandas as pd
-from src.data.AbstractData import AbstractData
-from src.logservice.ILoggerService import ILoggerService
+from gyld.sdk.data.AbstractData import AbstractData
+from gyld.sdk.logservice.ILoggerService import ILoggerService
 
 
 @dataclasses.dataclass

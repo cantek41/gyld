@@ -1,7 +1,7 @@
 import abc
 
-from src.data.DataBaseContainer import DataBaseContainer
-from src.logservice.LoggerService import ILoggerService
+from gyld.sdk.data.DataBaseContainer import DataBaseContainer
+from gyld.sdk.logservice.LoggerService import ILoggerService
 
 
 class BaseService(metaclass=abc.ABCMeta):

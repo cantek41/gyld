@@ -1,7 +1,7 @@
 import json
 
-from src.data.DataBase import DataBase
-from src.logservice.ILoggerService import ILoggerService
+from gyld.sdk.data.DataBase import DataBase
+from gyld.sdk.logservice.ILoggerService import ILoggerService
 
 
 class DataBaseContainer:

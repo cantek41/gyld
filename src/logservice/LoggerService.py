@@ -1,4 +1,4 @@
-from src.logservice.ILoggerService import ILoggerService
+from gyld.sdk.logservice.ILoggerService import ILoggerService
 import logging
 from datetime import datetime
 
