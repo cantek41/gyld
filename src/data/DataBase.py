@@ -29,9 +29,9 @@ class DataBase(AbstractData):
 
     def _pre_save(self, param):
         if param is None:
-            param = dict
+            param = {}
         if "if_exists" not in param.keys():
-            param["if_exists"] = 'replace'
+            param["if_exists"] = 'append'
         if "chunksize" not in param.keys():
             param["chunksize"] = 100
         return param
